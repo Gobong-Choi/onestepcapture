@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>변경 내용 — 원스텝캡쳐</title>
+<meta name="description" content="원스텝캡쳐가 판마다 어떻게 바뀌었는지 정리한 목록.">
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1a1a1e; --dim:#5f5f6b; --line:#e3e3e8;
+    --card:#f7f7f9; --accent:#0069c2; --accent-fg:#ffffff; --code:#f0f0f4;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#16161a; --fg:#eeeef2; --dim:#a0a0ad; --line:#2c2c33;
+      --card:#1e1e24; --accent:#3d95e6; --accent-fg:#0b0b0e; --code:#22222a;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg); line-height:1.7;
+    font-family:"Malgun Gothic","맑은 고딕",-apple-system,"Segoe UI",sans-serif;
+    font-size:16px;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+  header{padding:56px 0 32px; text-align:center; border-bottom:1px solid var(--line)}
+  h1{font-size:34px; margin:0 0 12px; font-weight:700; letter-spacing:-.02em}
+  .tag{color:var(--dim); font-size:16px; margin:0 0 24px}
+  .back{
+    display:inline-block; color:var(--accent); text-decoration:none;
+    font-size:15px; font-weight:700;
+  }
+  .back:hover{text-decoration:underline}
+  .rel{padding:32px 0; border-bottom:1px solid var(--line)}
+  .rel:last-child{border-bottom:none}
+  .rel h2{
+    font-size:22px; margin:0 0 14px; font-weight:700;
+    display:flex; align-items:baseline; flex-wrap:wrap; gap:10px;
+  }
+  .date{color:var(--dim); font-size:14px; font-weight:400}
+  .now{
+    background:var(--accent); color:var(--accent-fg); font-size:12px;
+    font-weight:700; padding:3px 9px; border-radius:20px; letter-spacing:.02em;
+  }
+  ul{margin:0; padding-left:22px}
+  li{margin-bottom:8px}
+  li:last-child{margin-bottom:0}
+  code{
+    background:var(--code); padding:2px 7px; border-radius:5px;
+    font-family:Consolas,"Courier New",monospace; font-size:14px;
+  }
+  .note{color:var(--dim); font-size:15px; margin:14px 0 0}
+  .early{color:var(--dim)}
+  footer{margin-top:48px; padding:28px 0 56px; border-top:1px solid var(--line); color:var(--dim); font-size:14px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>변경 내용</h1>
+    <p class="tag">원스텝캡쳐가 판마다 어떻게 달라졌는지 정리한 목록입니다.</p>
+    <a class="back" href="./">← 설치 안내로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="rel">
+    <h2>v1.9.5 <span class="date">2026-08-13</span> <span class="now">지금 판</span></h2>
+    <ul>
+      <li><b>설치 안내 페이지가 생겼습니다.</b> 설치 방법, 단축키, 기능이 한 페이지에 정리돼 있고
+        판이 바뀌어도 주소는 그대로입니다. 지인에게 링크를 다시 보낼 필요가 없습니다.</li>
+      <li>설정 창 <b>[정보] 탭</b>의 받는 곳 버튼이 이 안내 페이지를 엽니다.</li>
+      <li>지금 보고 있는 <b>변경 내용 페이지</b>가 생겼습니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.9.4 <span class="date">2026-08-13</span></h2>
+    <ul>
+      <li><b>설정 창에 [정보] 탭이 생겼습니다.</b> 지금 판 번호를 보고
+        <b>[업데이트 확인]</b>으로 새 판이 있는지 알 수 있습니다.
+        누를 때만 인터넷에 연결하고, <b>보내는 정보는 없습니다.</b></li>
+      <li>창을 좁히면 편집 창 아래 <b>[변경]</b> 버튼이 화면 밖으로 밀려나던 문제를 고쳤습니다.</li>
+      <li>받는 파일에서 개발용 파일을 빼고, 설명서 이름을 <code>사용설명서.md</code>로 바꿨습니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.9.1 ~ v1.9.3 <span class="date">2026-08-13</span></h2>
+    <ul>
+      <li><b>사용 조건(<code>LICENSE.txt</code>)을 넣었습니다.</b> 개인·업무 용도로 자유롭게
+        쓰실 수 있고, 캡처한 결과물에 대한 권리는 전적으로 사용자에게 있습니다.
+        재배포와 판매는 허용되지 않습니다.</li>
+      <li>프로그램 이름을 <b>원스텝캡쳐</b>로 통일했습니다.
+        예전 판에서 해둔 설정과 자동 실행은 그대로 유지됩니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.9.0 <span class="date">2026-08-13</span></h2>
+    <ul>
+      <li><b>기본 단축키가 Alt + 1 ~ 4 로 바뀌었습니다.</b>
+        (1 영역 · 2 전체 화면 · 3 활성 창 · 4 스크롤)
+        <b>이미 쓰던 분의 설정은 그대로 유지됩니다.</b> 새 기본값을 쓰려면
+        설정 창에서 <b>[전체 기본값으로]</b>를 누르시면 됩니다.</li>
+      <li>Ctrl 이나 Shift 를 함께 누른 <b>Print Screen</b>이 단축키 칸에 입력되지 않던
+        문제를 고쳤습니다.</li>
+      <li>저장과 관련된 설정을 모두 <b>[저장] 탭</b> 한곳에 모았습니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.8.1 <span class="date">2026-08-13</span></h2>
+    <ul>
+      <li><b>확대경이 기본 꺼짐이 됐습니다.</b> 늘 켜져 있으면 시야를 가려서,
+        설정 창 <b>[동작] 탭</b>에서 켜거나 영역을 고르는 중 <b>Z 키</b>로
+        그 자리에서 켜고 끌 수 있습니다.</li>
+      <li><b>단축키 설정 화면을 다시 만들었습니다.</b> 한 줄에 이름 · 키 · 되돌리기가
+        놓이고, 키 칸을 누른 뒤 원하는 키를 누르면 바로 바뀝니다.</li>
+      <li><b>Print Screen 을 단독으로 지정하면 동작하지 않습니다.</b>
+        Windows 가 그 키를 먼저 가져가기 때문입니다. 이제 안내 창이 떠서
+        바로 되는 대안(Shift 나 Ctrl 을 함께 누르는 방법)을 알려줍니다.
+        <b>PC 설정을 직접 바꾸지는 않습니다.</b></li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.8.0 <span class="date">2026-08-13</span></h2>
+    <ul>
+      <li><b>조합키 없는 단축키를 쓸 수 있습니다.</b>
+        Print Screen · F1~F12 · Insert · Pause · Scroll Lock.
+        글자·숫자 키는 단독으로 쓸 수 없습니다 — 허용하면 그 키를 어디서도
+        입력할 수 없게 되기 때문입니다.</li>
+      <li><b>영역을 고르는 화면이 정돈됐습니다.</b> 모서리 손잡이 8개, 두 줄로 나뉜
+        크기 표시, 커서 주변을 7배로 보여주는 확대경, 빠른 실행 막대 아이콘.
+        화면이 좁아 막대가 잘려 양쪽 항목을 누를 수 없던 문제도 함께 고쳤습니다.</li>
+      <li><b>설정 창이 왼쪽 탭으로 나뉘었습니다.</b> 창 높이가 크게 줄어
+        한 화면에 편하게 들어옵니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.7.0 ~ v1.7.1 <span class="date">2026-08-13</span></h2>
+    <ul>
+      <li><b>색과 굵기를 클릭 한 번으로 고릅니다.</b> 색 견본 7칸과 굵기 4칸이
+        도구모음에 바로 놓여 있습니다. 마지막 <b>+</b> 칸에서 원하는 색을 직접
+        고를 수도 있습니다.</li>
+      <li>글자 도구를 고르면 굵기 칸이 <b>글자 크기</b>로 바뀌고,
+        모자이크를 고르면 색 견본이 꺼집니다.</li>
+      <li><b>편집 창 도구모음에 아이콘이 붙었습니다.</b> 글자만 늘어서 있던 줄이
+        훨씬 읽기 쉬워졌습니다.</li>
+      <li><b>[복사] 이름을 [편집본 복사]로 바꿨습니다.</b> 그려 넣은 표시까지
+        함께 복사되는 것이라 이름을 분명히 했습니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.6.0 ~ v1.6.1 <span class="date">2026-08-07 · 08-13</span></h2>
+    <ul>
+      <li><b>편집 화면 확대 / 축소가 생겼습니다.</b> <b>Ctrl + 마우스 휠</b>로
+        커서가 가리키는 지점을 제자리에 두고 10% ~ 800% 까지 조절합니다.
+        확대한 상태에서 휠이나 마우스 가운데 버튼 끌기로 화면을 옮길 수 있습니다.</li>
+      <li>배율은 <b>보는 배율일 뿐</b>이라 저장·복사되는 이미지는 항상 원본 크기입니다.</li>
+      <li>창을 좁히면 편집 창 아래 <b>저장 폴더 항목이 사라지던 문제</b>를 고쳤습니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.5.0 ~ v1.5.3 <span class="date">2026-08-07</span></h2>
+    <ul>
+      <li><b>채팅창에서 스크롤 캡처가 안 되던 문제를 고쳤습니다.</b> 채팅창은 대개
+        이미 맨 아래를 보고 있어 아래로 굴러가지 않습니다. 이제 <b>위로 방향을 바꿔</b>
+        지난 내용을 담습니다.</li>
+      <li>설정 창이나 편집 창에서 <b>활성 창 캡처</b>를 누르면 모니터 전체가 찍히던
+        문제를 고쳤습니다.</li>
+      <li>캡처 목록에서 <b>Shift / Ctrl 여러 개 선택</b>이 풀리던 문제를 고쳤습니다.</li>
+      <li><b>써둔 글자를 끌어서 옮길 수 있습니다.</b></li>
+      <li><b>설치 후 압축을 푼 폴더가 "사용 중입니다"로 지워지지 않던 문제</b>를 고쳤습니다.</li>
+      <li>저장 폴더를 바꾸는 <b>[변경]</b> 버튼을 저장 버튼 옆에 따로 뒀습니다.</li>
+      <li><b>메모리 사용이 크게 줄었습니다.</b> 전체 화면 5회 캡처 기준 108MB → 32MB,
+        창을 닫고 트레이에 있을 때는 1MB 미만입니다.</li>
+      <li>자동 실행 방식을 <b>시작프로그램 폴더</b>로 바꾸고 설치 파일에서
+        알아보기 어려운 부분을 없앴습니다. 하는 일은 같지만 백신이 덜 예민하게 봅니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2>v1.4.0 <span class="date">2026-08-06</span></h2>
+    <ul>
+      <li><b>스크롤 캡처</b>가 한 화면만 찍히거나, 중간 내용이 빠지거나 겹치던
+        문제들을 고쳤습니다.</li>
+      <li>영역을 고를 때 <b>드래그 없이 클릭하면 커서 아래 창 전체</b>를 잡습니다.</li>
+      <li>캡처 목록 <b>여러 개 선택</b>, 선택 저장 · 선택 삭제 · 전체 삭제.</li>
+      <li>파워셸 창을 닫으면 프로그램이 함께 꺼지던 문제, 편집 창이 항상 다른 창
+        위에 뜨던 문제를 고쳤습니다.</li>
+      <li><b>Windows 설정 &gt; 앱</b> 목록에서 제거할 수 있습니다.</li>
+    </ul>
+  </section>
+
+  <section class="rel">
+    <h2 class="early">v1.0.0 ~ v1.3.0 <span class="date">2026-07-31 · 08-05</span></h2>
+    <ul class="early">
+      <li>첫 판 — 영역 · 전체 화면 · 활성 창 캡처, 편집기, 트레이 상주.</li>
+      <li>스크롤 캡처, 글자 넣기, 캡처 기록과 전체 저장, 단축키 사용자 설정.</li>
+      <li>편집 창을 하나만 쓰면서 캡처별로 그려둔 표시를 보존합니다.
+        캡처 목록을 썸네일과 클릭 한 번 전환으로 바꿨고, 어두운 테마를 적용했습니다.</li>
+      <li>설치가 끝나면 설정 창이 뜨고, 압축을 풀지 않고 실행하면 안내 창을 띄웁니다.</li>
+    </ul>
+  </section>
+
+  <p class="note">더 자세한 내용이 필요하시면 <a href="mailto:skyrain84@gmail.com">문의</a>해 주세요.</p>
+
+</main>
+
+<footer class="wrap">
+  <p><a href="./">설치 안내로 돌아가기</a></p>
+  <p>&copy; 2026 skyrain84@gmail.com. 모든 권리 보유.</p>
+</footer>
+
+</body>
+</html>
