@@ -209,6 +209,25 @@
   .key-card .plus{color:var(--ink-soft);font-weight:700}
   .key-card h3{font-size:1rem;margin-bottom:4px}
   .key-card p{font-size:.86rem;color:var(--ink-soft)}
+  /* 키캡만 보면 고정된 값처럼 읽힌다. 바꿀 수 있다는 걸 키 옆에 붙여 둔다. */
+  .key-card .combo{position:relative}
+  .key-card .edit{
+    position:absolute;top:-9px;right:-2px;
+    background:var(--hl);color:var(--ink);
+    font-size:.62rem;font-weight:700;line-height:1;
+    padding:3px 6px;border-radius:5px;white-space:nowrap;
+  }
+  /* flex 로 두면 keep-all 때문에 글줄의 min-content 가 커져 좁은 화면에서 넘친다.
+     그냥 가운데 정렬된 문단으로 두고 표만 inline-block 으로 붙인다. */
+  .keys-note{
+    margin-top:20px;text-align:center;
+    font-size:.88rem;color:var(--ink-soft);
+  }
+  .keys-note .tag{
+    display:inline-block;vertical-align:middle;
+    background:var(--hl);color:var(--ink);font-weight:700;font-size:.8rem;
+    padding:3px 10px;border-radius:99px;margin-right:8px;
+  }
 
   /* ── 설치 ── */
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;counter-reset:step}
@@ -409,26 +428,27 @@
   <section class="wrap reveal">
     <div class="sec-head">
       <h2>단축키 네 개만 기억하세요</h2>
-      <p>캡처 방식 순서와 숫자가 그대로 맞습니다. 설정 창에서 바꿀 수 있어요.</p>
+      <p>캡처 방식 순서와 숫자가 그대로 맞아 외우기 쉬워요.</p>
     </div>
     <div class="keys">
       <div class="key-card">
-        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd></div>
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd><span class="edit">변경 가능</span></div>
         <h3>영역 캡처</h3><p>드래그로 범위 선택</p>
       </div>
       <div class="key-card">
-        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>2</kbd></div>
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>2</kbd><span class="edit">변경 가능</span></div>
         <h3>전체 화면</h3><p>모니터가 여러 대여도 한 장으로</p>
       </div>
       <div class="key-card">
-        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>3</kbd></div>
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>3</kbd><span class="edit">변경 가능</span></div>
         <h3>활성 창</h3><p>지금 보고 있는 창만</p>
       </div>
       <div class="key-card">
-        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>4</kbd></div>
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>4</kbd><span class="edit">변경 가능</span></div>
         <h3>스크롤 캡처</h3><p>긴 페이지를 이어 붙여 한 장으로</p>
       </div>
     </div>
+    <p class="keys-note"><span class="tag">모두 바꿀 수 있어요</span>설정 창에서 원하는 키로 바꿉니다. F1~F12 같은 낱개 키도 됩니다.</p>
     <div class="shotframe" style="margin-top:34px">
       <div class="bar"><i></i><i></i><i></i></div>
       <img src="./shot-overlay.png" width="1600" height="944" loading="lazy"
