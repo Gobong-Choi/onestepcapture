@@ -3,483 +3,623 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>원스텝캡쳐 — 가볍고 조용한 화면 캡처</title>
-<meta name="description" content="받는 파일 78KB. 광고는 편집 창 아래 한 줄. 계정도 로그인도 없고 밖으로 나가는 데이터가 없습니다. 켜둔 걸 잊게 되는 Windows 화면 캡처 도구.">
+<title>원스텝캡쳐 — 찍고, 바로 표시하고, 바로 넘깁니다</title>
+<meta name="description" content="찍은 자리에서 바로 표시하고 그대로 붙여넣는 Windows 화면 캡처 도구. 받는 파일 78KB, 로그인·계정 없음, 광고는 편집 창 아래 한 줄뿐입니다.">
 <link rel="icon" href="./icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="./icon-256.png">
-<meta name="theme-color" content="#0b78d0">
+<meta name="theme-color" content="#3D8BFD">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="원스텝캡쳐">
-<meta property="og:title" content="원스텝캡쳐 — 가볍고 조용한 화면 캡처">
-<meta property="og:description" content="받는 파일 78KB · 광고는 편집 창 아래 한 줄 · 밖으로 나가는 데이터 0건. 켜둔 걸 잊게 됩니다.">
+<meta property="og:title" content="원스텝캡쳐 — 찍고, 바로 표시하고, 바로 넘깁니다">
+<meta property="og:description" content="받는 파일 78KB · 광고는 편집 창 아래 한 줄 · 밖으로 나가는 데이터 0건.">
 <meta property="og:url" content="https://gobong-choi.github.io/onestepcapture/">
 <meta property="og:image" content="https://gobong-choi.github.io/onestepcapture/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <style>
-  /* ────────────────────────────────────────────────────────────
-     색은 프로그램에서 그대로 가져왔다.
-     --sel  : 영역 선택 화면의 선택 테두리 파랑 (앱 Theme.Accent)
-     --mark : 편집 창 형광펜 주황
-     ──────────────────────────────────────────────────────────── */
+  /* 제목 글꼴은 저장소에 직접 넣어 쓴다. 바깥 서버를 부르지 않는다.
+     '아무것도 주고받지 않는다'고 적어 둔 페이지가 방문자 IP 를 제3자에게
+     넘기면 말이 맞지 않는다. 쓰는 글자만 담아 30KB 로 줄였다.
+     → 제목 문구를 바꾸면 jua.woff2 도 다시 만들어야 한다 (CHANGELOG 참고) */
+  @font-face{
+    font-family:'Jua'; font-style:normal; font-weight:400; font-display:swap;
+    src:url('./jua.woff2') format('woff2');
+  }
+
   :root{
-    --paper:#ffffff; --ink:#14161c; --dim:#5c6070; --faint:#8b90a0;
-    --line:#e4e6ec; --panel:#f6f7fa; --panel2:#eceff5;
-    --sel:#0b78d0; --sel-fg:#ffffff; --mark:#e08a1e;
-    --stage:#eef1f6;
-    --shadow:0 1px 2px rgba(16,20,34,.07), 0 18px 44px rgba(16,20,34,.13);
+    --paper:#FFFDF8; --ink:#22303C; --ink-soft:#5A6B7B;
+    --hl:#FFDE59; --sky:#3D8BFD; --sky-deep:#2A6AD1; --coral:#FF6B5E;
+    --mist:#EDF1F5; --card:#FFFFFF; --line:#DCE3EA;
+    --radius:16px;
   }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --paper:#121419; --ink:#eceef4; --dim:#9aa0ae; --faint:#767c8a;
-      --line:#262a33; --panel:#191c22; --panel2:#1f232b;
-      --sel:#3d9ae8; --sel-fg:#080a0e; --mark:#e8a04a;
-      --stage:#0c0e12;
-      --shadow:0 1px 2px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
-    }
-  }
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{
-    margin:0; background:var(--paper); color:var(--ink); line-height:1.72;
+    background:var(--paper); color:var(--ink);
     font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",-apple-system,"Segoe UI",sans-serif;
-    font-size:16.5px; word-break:keep-all;
+    font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
   }
-  img{max-width:100%; height:auto; display:block}
-  a{color:var(--sel)}
-  :focus-visible{outline:3px solid var(--sel); outline-offset:3px; border-radius:4px}
+  h1,h2,.display{font-family:'Jua',"Malgun Gothic",sans-serif;font-weight:400;line-height:1.35}
+  img{max-width:100%;height:auto;display:block}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--sky);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
 
-  .wrap{max-width:780px; margin:0 auto; padding:0 22px}
-  .wide{max-width:1040px; margin:0 auto; padding:0 22px}
-
-  /* 자료용 글꼴. 프로그램이 실제로 보여주는 값에만 쓴다. */
-  .mono{font-family:Consolas,"Courier New",monospace; font-variant-numeric:tabular-nums}
-
-  /* ── 첫 화면 ───────────────────────────────────────────── */
-  .hero{background:var(--stage); border-bottom:1px solid var(--line); padding:60px 0 0}
-  .hero-top{text-align:center}
-  .appicon{width:64px; height:64px; margin:0 auto 20px; border-radius:15px}
-  h1{font-size:43px; line-height:1.2; margin:0 0 16px; font-weight:800; letter-spacing:-.035em}
-  .sub{color:var(--dim); font-size:18px; margin:0 auto 28px; max-width:29em}
-  .sub b{color:var(--ink); font-weight:700}
-
-  .cta{
-    display:inline-block; background:var(--sel); color:var(--sel-fg);
-    padding:17px 46px; border-radius:12px; text-decoration:none;
-    font-size:18.5px; font-weight:800; letter-spacing:-.01em;
-    box-shadow:0 3px 14px rgba(11,120,208,.32);
+  /* ── 상단바 ── */
+  .sitehead{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,253,248,.92);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    transition:box-shadow .25s ease;
   }
-  .cta:hover{filter:brightness(1.08)}
-  .meta{color:var(--faint); font-size:13.5px; margin:15px 0 0}
-  .meta a{color:var(--dim)}
+  .sitehead.scrolled{box-shadow:0 1px 0 var(--mist), 0 10px 26px rgba(34,48,60,.07)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Jua',"Malgun Gothic",sans-serif;font-size:1.25rem;text-decoration:none}
+  .logo img{width:30px;height:30px;border-radius:7px}
+  .top-cta{
+    font-weight:700;font-size:.95rem;text-decoration:none;
+    background:var(--ink);color:#fff;padding:9px 20px;border-radius:99px;
+    transition:transform .15s ease;
+  }
+  .top-cta:hover{transform:translateY(-2px)}
 
-  /* 근거 숫자 3개 — 직접 확인할 수 있는 값만 올린다 */
+  /* ── 히어로 ── */
+  .hero{padding-top:60px;padding-bottom:20px;text-align:center}
+  .capture-box{position:relative;display:inline-block;padding:52px 44px 44px}
+  .ants{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  .ants rect{fill:none;stroke:var(--sky);stroke-width:2.5;stroke-dasharray:10 8;rx:6;animation:march 1s linear infinite}
+  @keyframes march{to{stroke-dashoffset:-18}}
+  .capture-box::after{
+    content:"1280 × 420";
+    position:absolute;top:-14px;right:-6px;
+    background:var(--sky);color:#fff;
+    font-family:Consolas,monospace;font-size:.72rem;font-weight:700;letter-spacing:.04em;
+    padding:3px 10px;border-radius:6px;
+  }
+  .hero h1{font-size:clamp(1.9rem,5.2vw,3.1rem);letter-spacing:-.01em}
+  .hero h1 .hl{background:linear-gradient(transparent 55%, var(--hl) 55%, var(--hl) 92%, transparent 92%);padding:0 .08em}
+  .hero .sub{margin-top:20px;font-size:clamp(1rem,2.4vw,1.15rem);color:var(--ink-soft)}
+  .hero .sub strong{color:var(--ink)}
+
+  .cta-area{position:relative;display:inline-block;margin-top:34px}
+  .btn-download{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--sky);color:#fff;text-decoration:none;
+    font-family:'Jua',"Malgun Gothic",sans-serif;font-size:1.3rem;
+    padding:16px 40px;border-radius:99px;
+    box-shadow:0 6px 0 var(--sky-deep);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-download:hover{transform:translateY(2px);box-shadow:0 4px 0 var(--sky-deep)}
+  .btn-download:active{transform:translateY(6px);box-shadow:0 0 0 var(--sky-deep)}
+  .cta-note{margin-top:14px;font-size:.85rem;color:var(--ink-soft)}
+  .cta-note a{color:var(--ink-soft)}
+  .arrow-doodle{position:absolute;right:-92px;top:-34px;width:80px;pointer-events:none}
+
+  /* 근거 숫자 — 직접 확인할 수 있는 값만 올린다 */
   .proof{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
-    background:var(--line); border:1px solid var(--line); border-radius:13px;
-    overflow:hidden; margin:32px 0 0; padding:0; list-style:none; text-align:left;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+    max-width:660px;margin:30px auto 0;list-style:none;
   }
-  .proof li{background:var(--paper); padding:18px 20px}
+  .proof li{background:var(--card);border:1.5px solid var(--mist);border-radius:14px;padding:16px 14px}
   .proof .val{
-    display:block; font-family:Consolas,"Courier New",monospace;
-    font-size:27px; font-weight:700; letter-spacing:-.03em; line-height:1.2;
-    color:var(--ink); margin:0 0 5px;
+    display:block;font-family:Consolas,"Courier New",monospace;
+    font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;
   }
-  .proof .lab{display:block; font-size:14.5px; font-weight:700}
-  .proof .how{display:block; color:var(--faint); font-size:12.5px; margin-top:3px}
+  .proof .lab{display:block;font-size:.9rem;font-weight:700;margin-top:4px}
+  .proof .how{display:block;font-size:.76rem;color:var(--ink-soft);margin-top:2px}
+  .proof li:nth-child(1) .val{color:var(--sky)}
+  .proof li:nth-child(2) .val{color:var(--coral)}
+  .proof li:nth-child(3) .val{color:var(--ink)}
 
-  /* ── 서명: 히어로 화면을 '선택된 영역'처럼 감싼다 ────────── */
-  .stage{padding-top:46px}
-  .frame{position:relative; margin:0; line-height:0}
-  .frame img{border-radius:3px; box-shadow:var(--shadow)}
-  .frame::after{
-    content:""; position:absolute; inset:-2px;
-    border:2px solid var(--sel); border-radius:4px; pointer-events:none;
-  }
-  .hnd{
-    position:absolute; width:9px; height:9px; background:var(--sel);
-    border:1.5px solid var(--paper); border-radius:1px; z-index:2;
-  }
-  .hnd.tl{left:-6px; top:-6px}      .hnd.tm{left:calc(50% - 5px); top:-6px}
-  .hnd.tr{right:-6px; top:-6px}     .hnd.ml{left:-6px; top:calc(50% - 5px)}
-  .hnd.mr{right:-6px; top:calc(50% - 5px)}
-  .hnd.bl{left:-6px; bottom:-6px}   .hnd.bm{left:calc(50% - 5px); bottom:-6px}
-  .hnd.br{right:-6px; bottom:-6px}
-  .sizetag{
-    position:absolute; left:0; top:-34px; z-index:2;
-    background:rgba(16,18,24,.86); color:#fff; font-size:12.5px;
-    padding:4px 10px; border-radius:4px; line-height:1.5; letter-spacing:.02em;
-  }
-  .stage .cap{color:var(--faint); font-size:13px; text-align:center; margin:22px 0 0; padding-bottom:46px}
+  /* ── 섹션 공통 ── */
+  /* section 은 요소 선택자라 .wrap 의 padding 에 밀린다.
+     둘 다 붙은 요소이므로 section.wrap 으로 특이도를 올려야 위 여백이 산다. */
+  section.wrap{padding-top:78px}
+  .sec-head{text-align:center;margin-bottom:38px}
+  .sec-head h2{font-size:clamp(1.5rem,3.6vw,2rem)}
+  .sec-head p{color:var(--ink-soft);margin-top:8px}
 
-  /* ── 본문 ─────────────────────────────────────────────── */
-  /* section 은 요소 선택자라 .wrap 의 padding 에 밀린다. 특이도를 맞춘다. */
-  section.wrap{padding-top:74px}
-  .eyebrow{font-size:12.5px; font-weight:700; color:var(--sel); letter-spacing:.06em; margin:0 0 10px}
-  h2{font-size:29px; margin:0 0 12px; font-weight:800; letter-spacing:-.03em; line-height:1.3}
-  .lead{color:var(--dim); font-size:16.5px; margin:0 0 30px}
-  p{margin:0 0 14px}
-  .note{color:var(--dim); font-size:14.5px}
+  /* ── 직접 해보는 데모 ── */
+  .try-stage{
+    position:relative;max-width:760px;margin:0 auto;
+    background:#fff;border:1.5px solid var(--mist);border-radius:var(--radius);
+    overflow:hidden;cursor:crosshair;user-select:none;-webkit-user-select:none;touch-action:none;
+  }
+  .try-desktop{padding:30px 30px 34px;display:grid;gap:12px;pointer-events:none}
+  .bubble{max-width:26em;background:var(--mist);border-radius:14px 14px 14px 4px;padding:10px 16px;font-size:.92rem;color:var(--ink-soft)}
+  .bubble.me{justify-self:end;background:#EAF3FF;border-radius:14px 14px 4px 14px;color:var(--ink)}
+  .fake-img{height:64px;border-radius:10px;background:repeating-linear-gradient(-45deg,var(--mist) 0 10px,#F6F8FA 10px 20px)}
+  .try-hint{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    background:var(--ink);color:#fff;font-size:.9rem;font-weight:500;
+    padding:9px 18px;border-radius:99px;pointer-events:none;
+    display:flex;align-items:center;gap:8px;transition:opacity .3s ease;
+    box-shadow:0 8px 22px rgba(34,48,60,.3);white-space:nowrap;
+  }
+  .sel{position:absolute;display:none;border:2px dashed var(--sky);background:rgba(61,139,253,.07);box-shadow:0 0 0 9999px rgba(34,48,60,.28);pointer-events:none}
+  .sel .dims{position:absolute;top:-26px;left:0;background:var(--sky);color:#fff;font-family:Consolas,monospace;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap}
+  .sel-toolbar{position:absolute;display:none;gap:5px;background:var(--ink);border-radius:12px;padding:8px 11px;box-shadow:0 10px 26px rgba(34,48,60,.3);pointer-events:none}
+  .sel-toolbar span{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:.9rem;background:rgba(255,255,255,.09)}
+  .sel-toolbar span.on{background:var(--hl)}
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+  .flash.go{animation:flashfx .38s ease}
+  @keyframes flashfx{0%{opacity:.85}100%{opacity:0}}
+  .try-caption{text-align:center;font-size:.88rem;color:var(--ink-soft);margin-top:16px}
+  .try-reset{
+    display:none;margin:14px auto 0;align-items:center;gap:6px;
+    background:var(--card);border:1.5px solid var(--mist);border-radius:99px;
+    padding:7px 18px;font-size:.88rem;font-weight:500;font-family:inherit;color:var(--ink);cursor:pointer;
+  }
+  .try-reset.show{display:flex}
 
-  .shot{margin:0}
-  .shot img{border-radius:8px; border:1px solid var(--line); box-shadow:var(--shadow)}
-  .cap{color:var(--faint); font-size:13.5px; margin:14px 0 0; text-align:center}
+  /* ── 실제 화면 ── */
+  .shotframe{
+    background:var(--card);border:1.5px solid var(--mist);border-radius:var(--radius);
+    box-shadow:0 20px 50px rgba(34,48,60,.08);overflow:hidden;max-width:860px;margin:0 auto;
+  }
+  .shotframe .bar{display:flex;gap:7px;padding:13px 16px;border-bottom:1.5px solid var(--mist)}
+  .shotframe .bar i{width:11px;height:11px;border-radius:50%;background:var(--mist)}
+  .shotframe .bar i:first-child{background:var(--coral)}
+  .shotframe .bar i:nth-child(2){background:var(--hl)}
+  .shotcap{text-align:center;font-size:.88rem;color:var(--ink-soft);margin-top:18px}
 
-  /* 다른 점 — 큰 카드 */
-  .diff{display:grid; gap:13px; margin:0; padding:0; list-style:none}
-  .diff li{
-    background:var(--panel); border:1px solid var(--line);
-    border-left:3px solid var(--sel); border-radius:0 13px 13px 0; padding:20px 23px;
-  }
-  .diff li:nth-child(2){border-left-color:var(--mark)}
-  .diff h3{font-size:19px; margin:0 0 7px; font-weight:800; letter-spacing:-.025em}
-  .diff p{color:var(--dim); font-size:15px; margin:0 0 10px}
-  .diff p:last-child{margin-bottom:0}
-  .diff b{color:var(--ink)}
-  .diff .facts{margin:0; padding:0; list-style:none; display:grid; gap:5px}
-  .diff .facts li{
-    background:none; border:none; padding:0; border-radius:0;
-    color:var(--dim); font-size:14px; padding-left:15px; position:relative;
-  }
-  .diff .facts li::before{content:"·"; position:absolute; left:3px; color:var(--faint)}
+  /* ── 기능 카드 ── */
+  .features{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:760px;margin:0 auto}
+  .f-card{background:var(--card);border:1.5px solid var(--mist);border-radius:var(--radius);padding:26px 24px;transition:transform .18s ease, box-shadow .18s ease}
+  .f-card:hover{transform:translateY(-5px);box-shadow:0 14px 30px rgba(34,48,60,.09)}
+  .f-card h3{font-size:1.06rem;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .f-card h3 .ico{font-size:1.3rem}
+  .f-card > p{font-size:.92rem;color:var(--ink-soft)}
+  .f-demo{margin-top:16px;font-size:.95rem;background:var(--paper);border:1.5px dashed var(--line);border-radius:10px;padding:12px 14px}
+  .f-demo .pen{background:linear-gradient(transparent 52%, var(--hl) 52%, var(--hl) 94%, transparent 94%);font-weight:700}
+  .f-demo .rect{border:2px solid var(--coral);border-radius:4px;padding:0 5px;font-weight:700}
+  .f-demo .arrow{color:var(--coral);font-weight:700}
+  .f-demo .textnote{display:inline-block;background:var(--hl);border-radius:6px;padding:1px 9px;font-weight:700;transform:rotate(-2deg);box-shadow:2px 3px 0 rgba(34,48,60,.12)}
+  .mosaic{display:inline-grid;grid-template-columns:repeat(8,10px);grid-auto-rows:10px;vertical-align:-4px;border-radius:3px;overflow:hidden}
+  .mosaic i{background:var(--mist)}
+  .mosaic i:nth-child(3n){background:#D8DFE6}
+  .mosaic i:nth-child(4n){background:#C4CDD6}
+  .mosaic i:nth-child(7n){background:#E4E9EE}
 
-  /* 흐름 3단 */
-  .flow{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:13px; overflow:hidden; margin:0; padding:0; list-style:none}
-  .flow li{background:var(--paper); padding:20px 23px}
-  .flow .step{
-    display:inline-block; font-family:Consolas,monospace; font-size:12px; font-weight:700;
-    color:var(--sel); margin:0 0 6px;
-  }
-  /* 제목 줄만 블록으로. 그냥 .flow b 로 쓰면 문장 중간 굵은 글씨까지
-     블록이 되어 한 문장이 여러 줄로 쪼개진다. */
-  .flow > li > b{display:block; font-size:18px; margin:0 0 5px; letter-spacing:-.02em}
-  .flow > li > span{display:block; color:var(--dim); font-size:15px}
-  .flow > li > span b{color:var(--ink)}
+  /* ── 비교 ── */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .cmp{border-radius:var(--radius);padding:30px 28px}
+  .cmp h3{font-size:1.02rem;margin-bottom:16px}
+  .cmp.old{background:var(--mist)}
+  .cmp.old h3{color:var(--ink-soft)}
+  .cmp.new{background:#EAF3FF;border:1.5px solid #CFE3FF}
+  .cmp ol{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .cmp li{font-size:.9rem;display:flex;align-items:center;gap:10px}
+  .cmp.old li{color:var(--ink-soft)}
+  .cmp li .n{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;background:#fff;border:1.5px solid var(--line);color:var(--ink-soft)}
+  .cmp.new li .n{background:var(--hl);border-color:var(--hl);color:var(--ink)}
+  .cmp.new li{font-weight:500}
+  .cmp .done{margin-top:16px;font-family:'Jua',"Malgun Gothic",sans-serif;font-size:1rem}
+  .cmp.old .done{color:var(--ink-soft)}
+  .cmp.new .done{color:var(--sky)}
 
-  /* 설치 */
-  .steps{display:grid; gap:12px; margin:0 0 30px; padding:0; list-style:none; counter-reset:s}
-  .steps li{
-    display:flex; gap:16px; align-items:flex-start;
-    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px;
-  }
-  .steps li::before{
-    counter-increment:s; content:counter(s);
-    flex:0 0 auto; width:27px; height:27px; border-radius:50%;
-    background:var(--sel); color:var(--sel-fg);
-    font-size:14px; font-weight:800; line-height:27px; text-align:center;
-    font-family:Consolas,monospace;
-  }
-  .steps b{display:block; margin-bottom:3px}
-  .steps .note{display:block}
-  .again{text-align:center}
+  /* ── 단축키 ── */
+  .keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+  .key-card{background:var(--card);border:1.5px solid var(--mist);border-radius:var(--radius);padding:24px;text-align:center}
+  kbd{display:inline-block;font-family:Consolas,"Courier New",monospace;font-weight:700;font-size:.95rem;background:#fff;border:1.5px solid #CBD5DE;border-bottom-width:4px;border-radius:9px;padding:6px 13px;min-width:44px}
+  .key-card .combo{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:14px}
+  .key-card .plus{color:var(--ink-soft);font-weight:700}
+  .key-card h3{font-size:1rem;margin-bottom:4px}
+  .key-card p{font-size:.86rem;color:var(--ink-soft)}
 
-  /* 단축키 */
-  .keys{display:grid; gap:9px; margin:0 0 30px}
-  .krow{
-    display:flex; align-items:center; gap:12px;
-    border:1px solid var(--line); border-radius:11px; padding:13px 17px; background:var(--panel);
+  /* ── 설치 ── */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;counter-reset:step}
+  .step{background:var(--card);border:1.5px solid var(--mist);border-radius:var(--radius);padding:28px 24px;counter-increment:step}
+  .step::before{
+    content:counter(step);
+    font-family:'Jua',"Malgun Gothic",sans-serif;font-size:1.05rem;
+    width:38px;height:38px;border-radius:50%;
+    background:var(--hl);display:grid;place-items:center;margin-bottom:14px;
   }
-  kbd{
-    font-family:Consolas,"Courier New",monospace; font-size:13.5px; font-weight:700; color:var(--ink);
-    background:var(--paper); border:1px solid var(--line); border-bottom-width:2px;
-    border-radius:6px; padding:4px 10px; min-width:34px; text-align:center;
-  }
-  .plus{color:var(--faint); font-size:12px}
-  .kname{margin-left:5px; font-weight:700}
-  .kdesc{color:var(--dim); font-size:14.5px; margin-left:auto; text-align:right}
+  .step h3{font-size:1.02rem;margin-bottom:6px}
+  .step p{font-size:.9rem;color:var(--ink-soft)}
+  .steps-note{text-align:center;color:var(--ink-soft);font-size:.9rem;margin-top:18px}
 
-  /* 자주 묻는 것 */
-  details{border:1px solid var(--line); border-radius:11px; padding:0 20px; margin:0 0 9px; background:var(--panel)}
-  details[open]{background:var(--panel2)}
-  summary{
-    cursor:pointer; padding:15px 0; font-weight:700; list-style:none;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-  }
+  /* ── 믿음 ── */
+  .trust{background:var(--mist);border-radius:24px;padding:52px 40px;margin-top:74px}
+  .trust .sec-head{margin-bottom:26px}
+  .trust ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;max-width:840px;margin:0 auto}
+  .trust li{background:var(--card);border-radius:12px;padding:16px 18px;font-size:.92rem;display:flex;gap:11px;align-items:flex-start}
+  .trust li .ok{color:var(--sky);font-weight:700;flex:none}
+  .trust li.ad .ok{color:var(--coral)}
+  .trust li b{font-weight:700}
+
+  /* ── 자주 묻는 것 ── */
+  .faq{max-width:760px;margin:0 auto}
+  details{background:var(--card);border:1.5px solid var(--mist);border-radius:14px;padding:0 20px;margin-bottom:10px}
+  summary{cursor:pointer;padding:15px 0;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
   summary::-webkit-details-marker{display:none}
-  summary::after{content:"+"; color:var(--sel); font-weight:800; font-size:19px; line-height:1}
+  summary::after{content:"+";color:var(--sky);font-weight:700;font-size:1.2rem;line-height:1}
   details[open] summary::after{content:"−"}
-  details .body{padding:0 0 18px; color:var(--dim); font-size:15px}
-  details .body p{margin:0 0 12px}
+  details .body{padding:0 0 18px;color:var(--ink-soft);font-size:.94rem}
+  details .body p{margin-bottom:12px}
   details .body p:last-child{margin-bottom:0}
   details .body b{color:var(--ink)}
+  details .body ul{margin:0 0 12px 18px}
+  details .body li{margin-bottom:5px}
+  code{background:var(--mist);padding:2px 7px;border-radius:5px;font-family:Consolas,"Courier New",monospace;font-size:.86rem;overflow-wrap:anywhere}
+  pre{background:var(--mist);padding:12px 14px;border-radius:9px;margin-bottom:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+  pre code{background:none;padding:0}
 
-  code{
-    background:var(--panel2); padding:2px 7px; border-radius:5px;
-    font-family:Consolas,"Courier New",monospace; font-size:14px; overflow-wrap:anywhere;
-  }
-  pre{
-    background:var(--panel2); padding:13px 15px; border-radius:9px; margin:0 0 12px;
-    white-space:pre-wrap; overflow-wrap:anywhere;
-  }
-  pre code{background:none; padding:0}
-  ul.plain{margin:0 0 12px; padding-left:20px}
-  ul.plain li{margin-bottom:6px}
+  /* ── 마무리 ── */
+  .last-cta{text-align:center;padding-top:82px;padding-bottom:30px}
+  .last-cta h2{font-size:clamp(1.5rem,3.6vw,2rem);margin-bottom:26px}
+  footer.wrap{border-top:1.5px solid var(--mist);margin-top:54px;padding-top:28px;padding-bottom:44px;text-align:center;font-size:.85rem;color:var(--ink-soft)}
+  footer a{text-decoration:underline}
+  footer p{margin-bottom:6px}
 
-  /* .wrap 의 margin/padding 에 밀리지 않게 특이도를 맞춘다 */
-  footer.wrap{
-    margin-top:84px; padding:30px 22px 64px; border-top:1px solid var(--line);
-    color:var(--faint); font-size:14px;
-  }
-  footer p{margin:0 0 6px}
+  /* ── 스크롤 리빌 ── */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.inview{opacity:1;transform:none}
 
-  @media (prefers-reduced-motion:reduce){ *{transition:none !important; animation:none !important} }
+  @media (max-width:700px){.compare{grid-template-columns:1fr}}
+  @media (max-width:560px){.features{grid-template-columns:1fr}}
   @media (max-width:640px){
-    h1{font-size:31px}
-    h2{font-size:24px}
-    .sub{font-size:16.5px}
-    body{font-size:16px}
-    .cta{display:block; padding:16px 20px}
-    .proof{grid-template-columns:1fr}
-    .proof .val{font-size:24px}
-    .krow{flex-wrap:wrap}
-    .kdesc{margin-left:0; width:100%; text-align:left}
-    .sizetag{top:-30px; font-size:11.5px}
-    .stage{padding-top:32px}
+    .capture-box{padding:40px 20px 36px}
+    .arrow-doodle{display:none}
+    .trust{padding:40px 22px}
+    .proof{grid-template-columns:1fr;max-width:340px}
+    .btn-download{width:100%;justify-content:center}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
   }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="wrap hero-top">
-    <img class="appicon" src="./icon-256.png" width="64" height="64" alt="원스텝캡쳐 아이콘">
-    <h1>가볍고, 조용하고,<br>아무것도 가져가지 않습니다</h1>
-    <p class="sub">화면 캡처 도구는 이미 쓰고 계실 겁니다.<br>
-      다른 점은 <b>켜둔 채로 두었을 때</b> 드러납니다.</p>
-    <a class="cta" href="https://github.com/Gobong-Choi/onestepcapture/releases/latest/download/OneStepCapture-Setup.zip">내려받기</a>
-    <p class="meta">
-      <span id="ver">v1.9.9</span> &middot; Windows 10 / 11 &middot; 관리자 권한 불필요<br>
-      <a href="./changes.html">이전 판·변경 내용 보기</a>
-    </p>
-
-    <ul class="proof">
-      <li>
-        <span class="val">78KB</span>
-        <span class="lab">받는 파일 전체</span>
-        <span class="how">설치 프로그램까지 포함한 크기입니다</span>
-      </li>
-      <li>
-        <span class="val">1줄</span>
-        <span class="lab">광고는 이게 전부</span>
-        <span class="how">편집 창 맨 아래. 팝업·배너가 없습니다</span>
-      </li>
-      <li>
-        <span class="val">0건</span>
-        <span class="lab">밖으로 나가는 데이터</span>
-        <span class="how">계정도 로그인도 없습니다</span>
-      </li>
-    </ul>
-  </div>
-
-  <div class="wide stage">
-    <figure class="frame">
-      <span class="sizetag mono">2880 &times; 1704</span>
-      <img src="./shot-editor.png" width="1600" height="947"
-           alt="원스텝캡쳐 편집 창. 캡처한 문서 위에 형광펜, 빨간 사각형, 화살표, 모자이크가 그려져 있고 맨 아래에 후원 표기 한 줄이 있다.">
-      <span class="hnd tl"></span><span class="hnd tm"></span><span class="hnd tr"></span>
-      <span class="hnd ml"></span><span class="hnd mr"></span>
-      <span class="hnd bl"></span><span class="hnd bm"></span><span class="hnd br"></span>
-    </figure>
-    <p class="cap">맨 아래 한 줄이 이 프로그램의 광고 전부입니다</p>
-  </div>
+<div class="sitehead" id="sitehead">
+<header class="wrap topbar">
+  <a class="logo" href="#">
+    <img src="./icon-256.png" width="30" height="30" alt="">원스텝캡쳐
+  </a>
+  <a class="top-cta" href="https://github.com/Gobong-Choi/onestepcapture/releases/latest/download/OneStepCapture-Setup.zip">내려받기</a>
+</header>
 </div>
 
 <main>
 
-  <section class="wrap">
-    <p class="eyebrow mono">왜 바꿀 만한가</p>
-    <h2>다른 점은 세 가지입니다</h2>
-    <p class="lead">찍고 저장하는 건 어느 도구나 합니다. 아래 세 가지가 이 프로그램을 고를 이유입니다.</p>
+  <div class="wrap hero">
+    <div class="capture-box">
+      <svg class="ants" aria-hidden="true"><rect x="1" y="1" width="99.8%" height="98%"/></svg>
+      <h1>화면을 찍고,<br><span class="hl">바로 표시하고</span>, 바로 넘깁니다</h1>
+    </div>
+    <p class="sub">로그인도 계정도 없이.<br><strong>켜둔 걸 잊을 만큼 가볍습니다.</strong></p>
 
-    <ul class="diff">
-      <li>
-        <h3>켜둔 걸 잊게 됩니다</h3>
-        <p>시작할 때 같이 떠 있어도 부팅이 느려지지 않습니다. 평소에는 트레이에서 조용히 기다립니다.</p>
-        <ul class="facts">
-          <li>받는 파일 <b>78KB</b> — 내려받는 데 몇 초 걸리지 않습니다</li>
-          <li>프로그램 본체 <b>약 240KB</b> (설치 폴더 1.4MB 중 대부분이 아이콘)</li>
-          <li>트레이에서 기다리는 동안 <b>작업 관리자에 뜨는 메모리 1MB 미만</b></li>
-          <li>업데이트를 알아서 받지 않습니다. 확인은 눌러야 합니다</li>
-        </ul>
-      </li>
-      <li>
-        <h3>광고가 일하는 걸 방해하지 않습니다</h3>
-        <p>전국 당일 꽃배달 서비스 「꽃집청년들」이 이 프로그램을 지원합니다.
-          그 표기 <b>한 줄</b>이 광고의 전부이고, 편집 창 맨 아래에 조용히 있습니다.</p>
-        <ul class="facts">
-          <li>팝업·배너·전면 광고가 <b>없습니다</b></li>
-          <li>시작할 때 뜨는 창, 종료할 때 뜨는 창이 <b>없습니다</b></li>
-          <li><b>프로그램이 광고를 받아오지 않습니다.</b> 그 문장은 소스에 그대로 적혀 있습니다</li>
-          <li>받아오지 않으니 <b>광고를 위한 추적이 원리적으로 불가능합니다</b></li>
-        </ul>
-      </li>
-      <li>
-        <h3>아무것도 가져가지 않습니다</h3>
-        <p>계정을 만들 필요도, 로그인할 필요도 없습니다. 찍은 화면은 내 컴퓨터 밖으로 나가지 않습니다.</p>
-        <ul class="facts">
-          <li>사용 기록·통계·개인정보를 <b>수집하지 않습니다</b></li>
-          <li>프로그램이 인터넷에 접속하는 곳은 <b>[업데이트 확인] 버튼 하나</b>뿐입니다</li>
-          <li>누를 때도 <b>최신 판 번호만</b> 받아옵니다. 보내는 데이터가 없습니다</li>
-          <li>소스가 배포본에 <b>평문으로</b> 들어 있어 메모장으로 확인하실 수 있습니다</li>
-        </ul>
-      </li>
+    <div class="cta-area">
+      <a class="btn-download" href="https://github.com/Gobong-Choi/onestepcapture/releases/latest/download/OneStepCapture-Setup.zip">무료로 내려받기</a>
+      <svg class="arrow-doodle" viewBox="0 0 80 70" aria-hidden="true">
+        <path d="M72 8 C50 14, 30 26, 16 50" fill="none" stroke="#FF6B5E" stroke-width="4" stroke-linecap="round"/>
+        <path d="M10 40 L15 52 L28 49" fill="none" stroke="#FF6B5E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="cta-note">
+        Windows 10 / 11 · <span id="ver">v1.9.9</span> · 관리자 권한 필요 없음<br>
+        <a href="./changes.html">이전 판·변경 내용 보기</a>
+      </p>
+    </div>
+
+    <ul class="proof">
+      <li><span class="val">78KB</span><span class="lab">받는 파일 전체</span><span class="how">설치 파일까지 포함</span></li>
+      <li><span class="val">1줄</span><span class="lab">광고는 이게 전부</span><span class="how">편집 창 맨 아래, 팝업 없음</span></li>
+      <li><span class="val">0건</span><span class="lab">밖으로 나가는 데이터</span><span class="how">계정도 로그인도 없음</span></li>
     </ul>
+  </div>
+
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>말로 설명하는 것보다, 한 번 해보시죠</h2>
+    </div>
+    <div class="try-stage" id="stage">
+      <div class="try-desktop">
+        <div class="bubble">저번에 말씀하신 자료, 어디서 확인하면 되나요?</div>
+        <div class="bubble me">화면 찍어서 바로 보내드릴게요!</div>
+        <div class="fake-img"></div>
+        <div class="bubble">감사합니다 👍</div>
+      </div>
+      <div class="try-hint" id="hint"><span aria-hidden="true">✛</span>여기 아무 곳이나 드래그해 보세요</div>
+      <div class="sel" id="sel"><span class="dims" id="dims"></span></div>
+      <div class="sel-toolbar" id="selbar" aria-hidden="true">
+        <span class="on">🖊️</span><span>⬜</span><span>➜</span><span>▦</span><span>가</span>
+      </div>
+      <div class="flash" id="flash"></div>
+    </div>
+    <button class="try-reset" id="resetsel" type="button">↺ 다시 해보기</button>
+    <p class="try-caption">방금 그 느낌 그대로입니다 — 진짜 프로그램은 <strong>Alt + 1</strong>로 시작해요.</p>
   </section>
 
-  <section class="wrap">
-    <p class="eyebrow mono">Alt + 1 &rarr; Ctrl + C &rarr; Ctrl + V</p>
-    <h2>찍고, 쓰고, 바로 넘깁니다</h2>
-    <p class="lead">파일로 저장했다가 다시 찾아 첨부하는 왕복이 없습니다.
-      캡처한 자리에서 표시하고, 그대로 대화창에 붙여넣으면 끝입니다.</p>
-    <ol class="flow">
-      <li>
-        <span class="step mono">Alt + 1</span>
-        <b>찍는다</b>
-        <span>영역을 끌면 편집 창이 바로 열립니다. 전체 화면·활성 창·스크롤도 각각 단축키 하나입니다.</span>
-      </li>
-      <li>
-        <span class="step mono">펜 · 형광펜 · 화살표 · 모자이크 · 글자</span>
-        <b>표시한다</b>
-        <span>짚어줄 곳에 화살표를, 가릴 곳에 모자이크를. 써넣은 글자는 끌어서 옮길 수 있습니다.</span>
-      </li>
-      <li>
-        <span class="step mono">Ctrl + C</span>
-        <b>넘긴다</b>
-        <span><b>편집본 복사</b>를 누르면 그려 넣은 것까지 함께 복사됩니다.
-          대화창에 <b>Ctrl + V</b>. 파일을 만들 필요가 없습니다.</span>
-      </li>
-    </ol>
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>찍은 자리에서 바로 표시합니다</h2>
+      <p>다른 편집 프로그램을 열 필요가 없어요. 아래는 실제 프로그램 화면입니다.</p>
+    </div>
+    <div class="shotframe">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <img src="./shot-editor.png" width="1600" height="947"
+           alt="원스텝캡쳐 편집 창. 캡처한 문서 위에 형광펜, 빨간 사각형, 화살표, 모자이크가 그려져 있고 맨 아래에 후원 표기 한 줄이 있다.">
+    </div>
+    <p class="shotcap">맨 아래 한 줄이 이 프로그램의 광고 전부입니다</p>
   </section>
 
-  <section class="wrap">
-    <p class="eyebrow mono">Alt + 1</p>
-    <h2>고르는 순간이 정확합니다</h2>
-    <p class="lead">끌면 크기가 실시간으로 보이고, 모서리를 잡아 다시 맞출 수 있습니다.
-      드래그 없이 그냥 클릭하면 커서 아래 창 전체를 잡습니다.
-      1픽셀까지 맞춰야 할 때는 <b>Z 키</b>로 확대경을 켭니다.</p>
-    <div class="shot">
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>표시 도구 네 가지, 이게 전부입니다</h2>
+      <p>많은 기능 대신, 매일 쓰는 것만 빠르게.</p>
+    </div>
+    <div class="features">
+      <div class="f-card">
+        <h3><span class="ico" aria-hidden="true">🖊️</span>펜 · 형광펜</h3>
+        <p>강조할 곳에 바로 긋습니다.</p>
+        <div class="f-demo">이 부분이 <span class="pen">제일 중요해요</span></div>
+      </div>
+      <div class="f-card">
+        <h3><span class="ico" aria-hidden="true">⬜</span>사각형 · 화살표</h3>
+        <p>짚어줄 곳을 분명하게.</p>
+        <div class="f-demo"><span class="arrow">→</span> <span class="rect">여기를 누르세요</span></div>
+      </div>
+      <div class="f-card">
+        <h3><span class="ico" aria-hidden="true">▦</span>모자이크</h3>
+        <p>숫자·이름처럼 가릴 것을 가립니다.</p>
+        <div class="f-demo">연락처: <span class="mosaic" aria-label="모자이크로 가려진 전화번호"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+      </div>
+      <div class="f-card">
+        <h3><span class="ico" aria-hidden="true">가</span>글자</h3>
+        <p>써넣고 끌어서 옮길 수 있습니다.</p>
+        <div class="f-demo">결재 부탁드립니다 <span class="textnote">오늘까지!</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>캡처하고 나서가 더 오래 걸리죠</h2>
+    </div>
+    <div class="compare">
+      <div class="cmp old">
+        <h3>보통은 이렇게 하죠</h3>
+        <ol>
+          <li><span class="n">1</span>화면을 캡처하고</li>
+          <li><span class="n">2</span>그림판이나 편집 프로그램을 열고</li>
+          <li><span class="n">3</span>붙여넣고</li>
+          <li><span class="n">4</span>표시하고, 저장하고</li>
+          <li><span class="n">5</span>저장한 파일을 찾아서 첨부</li>
+        </ol>
+        <p class="done">…벌써 지치네요.</p>
+      </div>
+      <div class="cmp new">
+        <h3>원스텝캡쳐는</h3>
+        <ol>
+          <li><span class="n">1</span><strong>Alt + 1</strong> 눌러서 찍고</li>
+          <li><span class="n">2</span>그 자리에서 바로 표시하고</li>
+          <li><span class="n">3</span>대화창에 바로 붙여넣기</li>
+        </ol>
+        <p class="done">끝. 그래서 원스텝입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>단축키 네 개만 기억하세요</h2>
+      <p>캡처 방식 순서와 숫자가 그대로 맞습니다. 설정 창에서 바꿀 수 있어요.</p>
+    </div>
+    <div class="keys">
+      <div class="key-card">
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd></div>
+        <h3>영역 캡처</h3><p>드래그로 범위 선택</p>
+      </div>
+      <div class="key-card">
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>2</kbd></div>
+        <h3>전체 화면</h3><p>모니터가 여러 대여도 한 장으로</p>
+      </div>
+      <div class="key-card">
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>3</kbd></div>
+        <h3>활성 창</h3><p>지금 보고 있는 창만</p>
+      </div>
+      <div class="key-card">
+        <div class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>4</kbd></div>
+        <h3>스크롤 캡처</h3><p>긴 페이지를 이어 붙여 한 장으로</p>
+      </div>
+    </div>
+    <div class="shotframe" style="margin-top:34px">
+      <div class="bar"><i></i><i></i><i></i></div>
       <img src="./shot-overlay.png" width="1600" height="944" loading="lazy"
            alt="영역 선택 화면. 고른 범위만 밝고 바깥은 어둡게 덮이며, 모서리 손잡이와 크기 표시, 확대경이 보인다.">
     </div>
-    <p class="cap">고른 범위만 밝게 남고, 크기와 확대경이 함께 표시됩니다</p>
+    <p class="shotcap">고른 범위만 밝게 남고, 크기와 확대경이 함께 표시됩니다</p>
   </section>
 
-  <section class="wrap">
-    <p class="eyebrow mono">설치.cmd</p>
-    <h2>30초면 끝납니다</h2>
-    <p class="lead">관리자 권한이 필요하지 않습니다. 설치가 끝나면 압축을 푼 폴더는 지워도 됩니다.</p>
-    <ol class="steps">
-      <li><div><b>받은 ZIP 파일을 오른쪽 클릭 → 압축 풀기</b>
-        <span class="note">압축 안에서 바로 실행하면 아무 일도 일어나지 않습니다.</span></div></li>
-      <li><div><b>풀린 폴더의 <code>설치.cmd</code> 실행</b>
-        <span class="note">설치가 끝나면 설정 창이 한 번 열립니다.</span></div></li>
-      <li><div><b>끝났습니다</b>
-        <span class="note">창을 닫아도 트레이에서 기다리며 단축키가 바로 동작합니다.</span></div></li>
-    </ol>
-    <p class="again"><a class="cta" href="https://github.com/Gobong-Choi/onestepcapture/releases/latest/download/OneStepCapture-Setup.zip">내려받기</a></p>
-  </section>
-
-  <section class="wrap">
-    <p class="eyebrow mono">Alt + 1 ~ 4</p>
-    <h2>손에 익는 네 개</h2>
-    <p class="lead">캡처 방식 순서와 숫자가 그대로 맞습니다. 설정 창에서 원하는 키로 바꿀 수 있습니다.</p>
-    <div class="keys">
-      <div class="krow"><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd>
-        <span class="kname">영역</span><span class="kdesc">드래그로 범위 선택</span></div>
-      <div class="krow"><kbd>Alt</kbd><span class="plus">+</span><kbd>2</kbd>
-        <span class="kname">전체 화면</span><span class="kdesc">모니터가 여러 대여도 한 장으로</span></div>
-      <div class="krow"><kbd>Alt</kbd><span class="plus">+</span><kbd>3</kbd>
-        <span class="kname">활성 창</span><span class="kdesc">지금 보고 있는 창만</span></div>
-      <div class="krow"><kbd>Alt</kbd><span class="plus">+</span><kbd>4</kbd>
-        <span class="kname">스크롤</span><span class="kdesc">긴 페이지를 이어 붙여 한 장으로</span></div>
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>설치는 30초면 끝나요</h2>
     </div>
-    <div class="shot">
-      <img src="./shot-settings.png" width="1300" height="743" loading="lazy"
-           alt="설정 창. 왼쪽에 캡처·단축키, 캡처 기록, 동작, 저장, 정보 탭이 있고 오른쪽에 Alt+1부터 Alt+4까지 단축키가 나열되어 있다.">
+    <div class="steps">
+      <div class="step">
+        <h3>내려받기</h3>
+        <p>위의 파란 버튼을 눌러 설치 파일을 받습니다.</p>
+      </div>
+      <div class="step">
+        <h3>압축 풀고 실행</h3>
+        <p>받은 ZIP 을 오른쪽 클릭해 압축을 풀고, 그 안의 <code>설치.cmd</code> 를 실행합니다.</p>
+      </div>
+      <div class="step">
+        <h3>Alt + 1 눌러보기</h3>
+        <p>설치가 끝나면 바로 첫 캡처를 찍어보세요.</p>
+      </div>
     </div>
-    <p class="cap">설정 창 — 단축키, 저장 폴더, 동작을 여기서 정합니다</p>
+    <p class="steps-note">관리자 권한도, 재부팅도 필요 없습니다. 압축을 푼 폴더는 지워도 됩니다.</p>
   </section>
 
-  <section class="wrap">
-    <p class="eyebrow mono">자주 묻는 것</p>
-    <h2>미리 답해 둡니다</h2>
-    <p class="lead">받기 전에 걸릴 만한 것들입니다.</p>
-
-    <details>
-      <summary>백신이 경고하지 않나요?</summary>
-      <div class="body">
-        <p>한 번 물어볼 수 있습니다. Windows 보안 기능(Smart App Control)이 서명되지 않은
-          <code>.exe</code>를 막기 때문에, 이 프로그램은 <b>Microsoft가 서명한 PowerShell을 통해
-          실행되는 형태</b>로 배포됩니다. 백신이 이 방식 자체를 낯설게 보는 경우가 있습니다.</p>
-        <p>숨기려고 고른 방식이 아니라, 서명 없는 실행 파일이 아예 실행되지 않아서 택한 방식입니다.
-          대신 소스 전체를 열어 확인하실 수 있고, 아래 해시로 파일이 바뀌지 않았는지 대조하실 수 있습니다.</p>
+  <section class="wrap reveal">
+    <div class="trust">
+      <div class="sec-head">
+        <h2>감춘 것이 없습니다</h2>
+        <p>처음 받는 프로그램이 무엇을 하는지 알 수 없다는 점이 가장 불편하니까요.</p>
       </div>
-    </details>
-
-    <details>
-      <summary>받은 파일이 진짜인지 확인하려면?</summary>
-      <div class="body">
-        <p>ZIP 파일이 있는 폴더에서 명령 프롬프트를 열고:</p>
-        <pre><code>certutil -hashfile OneStepCapture-Setup.zip SHA256</code></pre>
-        <p>나온 값이 아래와 같아야 합니다.</p>
-        <pre><code id="hash">1AB62DB52984A3ECE5CF90F62AE4B342F89F1F9007368E49D029B38035627594</code></pre>
-        <p>판이 바뀌면 이 값도 바뀝니다. (현재 <span id="ver2">v1.9.9</span> 기준)</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>정말 가벼운가요? 어떻게 확인하죠?</summary>
-      <div class="body">
-        <p>받는 파일이 <b>78KB</b>입니다. 설치 폴더는 약 1.4MB인데 그중 1.2MB가 아이콘 파일이고,
-          <b>프로그램 본체는 약 240KB</b>입니다.</p>
-        <p>실행 중에는 <b>작업 관리자</b>를 열어 직접 보실 수 있습니다.
-          트레이에서 기다리는 동안 메모리 칸이 <b>1MB 미만</b>으로 표시됩니다.
-          (Windows 가 쓰지 않는 메모리를 회수한 상태의 값이고, 편집 창을 열면 그림 크기만큼 늘어납니다.)</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>광고가 정말 한 줄뿐인가요?</summary>
-      <div class="body">
-        <p>네. 편집 창 맨 아래의 후원사 표기 한 줄이 전부입니다. 팝업·배너·전면 광고,
-          시작하거나 끌 때 뜨는 창이 없습니다.</p>
-        <p><b>그 문장은 프로그램 소스에 그대로 적혀 있습니다.</b> 어딘가에서 받아오는 것이 아니라
-          고정된 글입니다. 그래서 광고를 위해 무엇을 보고 있는지 살필 이유도, 방법도 없습니다.
-          <code>원스텝캡쳐.cs</code>를 메모장으로 열면 확인하실 수 있습니다.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>지우고 싶으면요?</summary>
-      <div class="body">
-        <p>시작 메뉴의 <b>[원스텝캡쳐 제거]</b>를 실행하시면 됩니다.
-          설정과 캡처 기록까지 함께 정리되고, <b>저장해둔 이미지 파일은 지워지지 않습니다.</b></p>
-        <p>설치는 <b>내 사용자 폴더 안에만</b> 됩니다. 시스템 폴더를 건드리지 않고,
-          레지스트리는 <b>[Windows 설정 &gt; 앱] 목록에 등록하는 항목 하나</b>만 씁니다.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>그냥 써도 되나요? 어디까지 되나요?</summary>
-      <div class="body">
-        <p>받은 파일 안의 <code>LICENSE.txt</code>에 적혀 있습니다. 요약하면:</p>
-        <ul class="plain">
-          <li>개인적·업무적 용도로 <b>자유롭게 사용</b>하실 수 있습니다.</li>
-          <li>캡처한 결과물에 대한 권리는 <b>전적으로 사용자</b>에게 있습니다.</li>
-          <li>재배포와 판매는 허용되지 않습니다. 필요하면 이 페이지 주소를 알려주세요.</li>
-        </ul>
-      </div>
-    </details>
+      <ul>
+        <li class="ad"><span class="ok">!</span><span><b>광고는 편집 창 맨 아래 한 줄뿐입니다.</b> 「꽃집청년들」이 이 프로그램을 지원합니다. 팝업·배너가 없고, <b>프로그램이 광고를 받아오지 않아</b> 추적이 원리적으로 불가능합니다.</span></li>
+        <li><span class="ok">✓</span><span>사용 기록·통계·개인정보를 <b>수집하지 않습니다.</b> 찍은 화면은 내 컴퓨터 밖으로 나가지 않습니다.</span></li>
+        <li><span class="ok">✓</span><span>계정 만들기, 로그인을 <b>요구하지 않습니다.</b> 다른 프로그램을 끼워 설치하지도 않습니다.</span></li>
+        <li><span class="ok">✓</span><span>인터넷에 접속하는 곳은 <b>[업데이트 확인] 버튼 하나</b>뿐이고, 그때도 최신 판 번호만 받아옵니다.</span></li>
+        <li><span class="ok">✓</span><span>소스가 배포본에 <b>평문으로</b> 들어 있어 메모장으로 열어 확인하실 수 있습니다.</span></li>
+        <li><span class="ok">✓</span><span>시스템 폴더를 건드리지 않고 <b>내 사용자 폴더 안에만</b> 설치됩니다.</span></li>
+      </ul>
+    </div>
   </section>
 
+  <section class="wrap reveal">
+    <div class="sec-head">
+      <h2>미리 답해 둡니다</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>백신이 경고하지 않나요?</summary>
+        <div class="body">
+          <p>한 번 물어볼 수 있습니다. Windows 보안 기능(Smart App Control)이 서명되지 않은
+            <code>.exe</code> 를 막기 때문에, 이 프로그램은 <b>Microsoft 가 서명한 PowerShell 을 통해
+            실행되는 형태</b>로 배포됩니다. 백신이 이 방식 자체를 낯설게 보는 경우가 있습니다.</p>
+          <p>숨기려고 고른 방식이 아니라, 서명 없는 실행 파일이 아예 실행되지 않아서 택한 방식입니다.
+            대신 소스 전체를 열어 확인하실 수 있고, 아래 해시로 파일이 바뀌지 않았는지 대조하실 수 있습니다.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>받은 파일이 진짜인지 확인하려면?</summary>
+        <div class="body">
+          <p>ZIP 파일이 있는 폴더에서 명령 프롬프트를 열고:</p>
+          <pre><code>certutil -hashfile OneStepCapture-Setup.zip SHA256</code></pre>
+          <p>나온 값이 아래와 같아야 합니다.</p>
+          <pre><code id="hash">1AB62DB52984A3ECE5CF90F62AE4B342F89F1F9007368E49D029B38035627594</code></pre>
+          <p>판이 바뀌면 이 값도 바뀝니다. (현재 <span id="ver2">v1.9.9</span> 기준)</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>정말 가벼운가요? 어떻게 확인하죠?</summary>
+        <div class="body">
+          <p>받는 파일이 <b>78KB</b> 입니다. 설치 폴더는 약 1.4MB 인데 그중 1.2MB 가 아이콘 파일이고,
+            <b>프로그램 본체는 약 240KB</b> 입니다.</p>
+          <p>실행 중에는 <b>작업 관리자</b>를 열어 직접 보실 수 있습니다. 트레이에서 기다리는 동안
+            메모리 칸이 <b>1MB 미만</b>으로 표시됩니다. (Windows 가 쓰지 않는 메모리를 회수한 상태의
+            값이고, 편집 창을 열면 그림 크기만큼 늘어납니다.)</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>광고가 정말 한 줄뿐인가요?</summary>
+        <div class="body">
+          <p>네. 편집 창 맨 아래의 후원사 표기 한 줄이 전부입니다. 팝업·배너·전면 광고,
+            시작하거나 끌 때 뜨는 창이 없습니다.</p>
+          <p><b>그 문장은 프로그램 소스에 그대로 적혀 있습니다.</b> 어딘가에서 받아오는 것이 아니라
+            고정된 글입니다. 그래서 광고를 위해 무엇을 보고 있는지 살필 이유도, 방법도 없습니다.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>지우고 싶으면요?</summary>
+        <div class="body">
+          <p>시작 메뉴의 <b>[원스텝캡쳐 제거]</b> 를 실행하시면 됩니다.
+            설정과 캡처 기록까지 함께 정리되고, <b>저장해둔 이미지 파일은 지워지지 않습니다.</b></p>
+          <p>레지스트리는 <b>[Windows 설정 &gt; 앱] 목록에 등록하는 항목 하나</b>만 쓰고, 제거할 때 같이 지워집니다.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>그냥 써도 되나요? 어디까지 되나요?</summary>
+        <div class="body">
+          <p>받은 파일 안의 <code>LICENSE.txt</code> 에 적혀 있습니다. 요약하면:</p>
+          <ul>
+            <li>개인적·업무적 용도로 <b>자유롭게 사용</b>하실 수 있습니다.</li>
+            <li>캡처한 결과물에 대한 권리는 <b>전적으로 사용자</b>에게 있습니다.</li>
+            <li>재배포와 판매는 허용되지 않습니다. 필요하면 이 페이지 주소를 알려주세요.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <div class="wrap last-cta">
+    <h2>다음 스크린샷부터, 한 번에 끝내보세요</h2>
+    <a class="btn-download" href="https://github.com/Gobong-Choi/onestepcapture/releases/latest/download/OneStepCapture-Setup.zip">무료로 내려받기</a>
+    <p class="cta-note">Windows 10 / 11 · 설치 30초 · 관리자 권한 필요 없음</p>
+  </div>
 </main>
 
 <footer class="wrap">
   <p>문의 · 버그 신고: <a href="mailto:skyrain84@gmail.com">skyrain84@gmail.com</a></p>
   <p>이 페이지의 화면들은 실제 프로그램을 찍은 것이며, 문서 내용은 예시용으로 지어낸 것입니다.</p>
-  <p>&copy; 2026 skyrain84@gmail.com. 모든 권리 보유.</p>
+  <p>&copy; 2026 skyrain84@gmail.com · <a href="./changes.html">변경 내용</a></p>
 </footer>
 
+<script>
+(function(){
+  var head = document.getElementById('sitehead');
+  addEventListener('scroll', function(){ head.classList.toggle('scrolled', scrollY > 8); }, {passive:true});
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('inview'); io.unobserve(e.target); } });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // 직접 드래그해 보는 캡처 데모
+  var stage = document.getElementById('stage'),
+      sel = document.getElementById('sel'),
+      bar = document.getElementById('selbar'),
+      hint = document.getElementById('hint'),
+      dims = document.getElementById('dims'),
+      flash = document.getElementById('flash'),
+      reset = document.getElementById('resetsel'),
+      sx = 0, sy = 0, dragging = false;
+
+  function pt(e){
+    var r = stage.getBoundingClientRect();
+    return [Math.min(Math.max(e.clientX - r.left, 0), r.width),
+            Math.min(Math.max(e.clientY - r.top, 0), r.height)];
+  }
+  function draw(e){
+    var p = pt(e), l = Math.min(sx,p[0]), t = Math.min(sy,p[1]),
+        w = Math.abs(p[0]-sx), h = Math.abs(p[1]-sy);
+    sel.style.left = l+'px'; sel.style.top = t+'px';
+    sel.style.width = w+'px'; sel.style.height = h+'px';
+    dims.textContent = Math.round(w)+' × '+Math.round(h);
+  }
+  stage.addEventListener('pointerdown', function(e){
+    if(stage.classList.contains('captured')) return;
+    dragging = true; var p = pt(e); sx = p[0]; sy = p[1];
+    sel.style.display = 'block'; bar.style.display = 'none';
+    hint.style.opacity = 0; draw(e);
+    stage.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  stage.addEventListener('pointermove', function(e){ if(dragging) draw(e); });
+  stage.addEventListener('pointerup', function(e){
+    if(!dragging) return; dragging = false;
+    if(sel.offsetWidth < 24 || sel.offsetHeight < 24){
+      sel.style.display = 'none'; hint.style.opacity = 1; return;
+    }
+    stage.classList.add('captured');
+    flash.classList.add('go'); setTimeout(function(){ flash.classList.remove('go'); }, 420);
+    bar.style.display = 'flex';
+    var top = sel.offsetTop + sel.offsetHeight + 10;
+    if(top > stage.clientHeight - 56) top = Math.max(sel.offsetTop - 56, 8);
+    bar.style.top = top+'px';
+    bar.style.left = Math.min(Math.max(sel.offsetLeft, 8), stage.clientWidth - 190)+'px';
+    reset.classList.add('show');
+  });
+  reset.addEventListener('click', function(){
+    stage.classList.remove('captured');
+    sel.style.display = 'none'; bar.style.display = 'none';
+    hint.style.opacity = 1; reset.classList.remove('show');
+  });
+})();
+</script>
 </body>
 </html>
